@@ -1,4 +1,4 @@
-
+import os
 import time
 import pandas as pd
 from binance.client import Client
@@ -7,7 +7,7 @@ from flask import Flask
 # Creiamo l'app Flask per Railway
 app = Flask(__name__)
 
-print("🤖 AVVIO TRADING BOT...")
+print("🤖 AVVIO TRADING BOT V2!...")
 print("🔐 Controllo API Keys...")
 
 # Controlliamo se le API Keys sono presenti
