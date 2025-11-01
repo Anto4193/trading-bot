@@ -1,5 +1,5 @@
-python-binance==1.0.19
-pandas==2.0.3
-numpy==1.24.3
-flask==2.3.3
-schedule==1.2.0
+python-binance
+pandas
+numpy
+flask
+schedule
