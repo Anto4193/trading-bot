@@ -1,8 +1,4 @@
 
-# Aggiorna GitHub
-git add .
-git commit -m "Descrizione modifica"
-git pushimport os
 import time
 import pandas as pd
 from binance.client import Client
