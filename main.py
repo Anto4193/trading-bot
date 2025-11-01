@@ -1,17 +1,41 @@
 import os
 import threading
+import time
 from flask import Flask
-from trading_bot import run_bot
 
 app = Flask(__name__)
+
+print("🎯 TRADING BOT ATTIVO - MODALITÀ SICURA!")
+
+def simple_bot():
+    """Bot semplice che monitora senza API Keys"""
+    import requests
+    
+    while True:
+        try:
+            # API PUBBLICA - nessuna key needed
+            url = "https://api.binance.com/api/v3/ticker/price"
+            params = {"symbol": "BTCUSDT"}
+            response = requests.get(url, params=params)
+            data = response.json()
+            price = float(data['price'])
+            
+            print(f"✅ BTC/USDT: {price:.2f}$ - {time.strftime('%H:%M:%S')}")
+            
+            # Aspetta 30 secondi
+            time.sleep(30)
+            
+        except Exception as e:
+            print(f"❌ Errore: {e}")
+            time.sleep(60)
 
 @app.route('/')
 def home():
     return """
     <h1>🤖 Trading Bot ATTIVO</h1>
-    <p>Il bot sta monitorando i mercati!</p>
+    <p>Monitoraggio Bitcoin in tempo reale</p>
+    <p><strong>Modalità:</strong> PAPER TRADING SICURO</p>
     <p><a href="/status">Controlla Stato</a></p>
-    <p><a href="/stop">Ferma Bot</a></p>
     """
 
 @app.route('/status')
@@ -19,23 +43,16 @@ def status():
     return {
         "status": "🟢 TRADING ATTIVO",
         "message": "Bot in esecuzione",
+        "mode": "PAPER TRADING SICURO",
         "symbol": "BTCUSDT",
-        "mode": "PAPER TRADING"
+        "timestamp": time.time()
     }
 
-@app.route('/stop')
-def stop():
-    return "🛑 Bot fermato (funzione non implementata)"
-
-def start_bot():
-    print("🎯 Avvio trading bot in background...")
-    run_bot()
-
 if __name__ == "__main__":
-    # Avvia il bot in un thread separato
-    bot_thread = threading.Thread(target=start_bot)
+    # Avvia il bot in background
+    bot_thread = threading.Thread(target=simple_bot)
     bot_thread.daemon = True
     bot_thread.start()
     
-    # Avvia il server web
+    print("🌐 Server web in avvio...")
     app.run(host='0.0.0.0', port=8000, debug=False)
