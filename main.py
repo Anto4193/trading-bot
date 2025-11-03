@@ -5,15 +5,14 @@ from flask import Flask
 
 app = Flask(__name__)
 
-print("🎯 TRADING BOT ATTIVO - MODALITÀ SICURA!")
+print("🤖 TRADING BOT ATTIVO - MODALITÀ IBIRIDA")
 
 def simple_bot():
-    """Bot semplice che monitora senza API Keys"""
+    """Bot semplice di monitoraggio"""
     import requests
     
     while True:
         try:
-            # API PUBBLICA - nessuna key needed
             url = "https://api.binance.com/api/v3/ticker/price"
             params = {"symbol": "BTCUSDT"}
             response = requests.get(url, params=params)
@@ -22,37 +21,50 @@ def simple_bot():
             
             print(f"✅ BTC/USDT: {price:.2f}$ - {time.strftime('%H:%M:%S')}")
             
-            # Aspetta 30 secondi
-            time.sleep(30)
+            time.sleep(300)  # 5 minuti
             
         except Exception as e:
-            print(f"❌ Errore: {e}")
+            print(f"❌ Errore monitoraggio: {e}")
             time.sleep(60)
+
+def ml_bot():
+    """Bot ML avanzato"""
+    try:
+        from ml_trading import ml_trading_bot
+        ml_trading_bot()
+    except Exception as e:
+        print(f"❌ Errore ML bot: {e}")
 
 @app.route('/')
 def home():
     return """
     <h1>🤖 Trading Bot ATTIVO</h1>
-    <p>Monitoraggio Bitcoin in tempo reale</p>
-    <p><strong>Modalità:</strong> PAPER TRADING SICURO</p>
+    <p>Monitoraggio + Machine Learning</p>
+    <p><strong>Modalità:</strong> PAPER TRADING IBIRIDO</p>
     <p><a href="/status">Controlla Stato</a></p>
+    <p><em>🧠 ML Bot in esecuzione</em></p>
     """
 
 @app.route('/status')
 def status():
     return {
         "status": "🟢 TRADING ATTIVO",
-        "message": "Bot in esecuzione",
-        "mode": "PAPER TRADING SICURO",
+        "mode": "IBIRIDO (Monitoraggio + ML)",
         "symbol": "BTCUSDT",
-        "timestamp": time.time()
+        "timestamp": time.time(),
+        "ml_enabled": True
     }
 
 if __name__ == "__main__":
-    # Avvia il bot in background
-    bot_thread = threading.Thread(target=simple_bot)
-    bot_thread.daemon = True
-    bot_thread.start()
+    # Avvia bot semplice in background
+    simple_thread = threading.Thread(target=simple_bot)
+    simple_thread.daemon = True
+    simple_thread.start()
+    
+    # Avvia bot ML in background
+    ml_thread = threading.Thread(target=ml_bot)
+    ml_thread.daemon = True
+    ml_thread.start()
     
     print("🌐 Server web in avvio...")
     app.run(host='0.0.0.0', port=8000, debug=False)
