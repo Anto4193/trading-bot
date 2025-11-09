@@ -236,7 +236,7 @@ def ml_bot():
                             self.sell_signals += 1
                         
                         print(f"⏰ {timestamp} | 🧠 ML: {signal} (score: {confidence:.2f}) | 💰 ${current_price:.2f}")
-                        print(f"📊 Stat: BUY={self.buy_signals}, SELL={self.sell_signals}, HOLD={self.trade_count - self.buy_signals - self.sell_signals}")
+                        print(f"📊 Stat: BUY={self.buy_signals}, SELL={self.sell_signals}, HOLD={max(0, self.trade_count - self.buy_signals - self.sell_signals)}")
                         
                         # Paper trading per segnali forti
                         if signal in ["BUY", "SELL"] and confidence > 0.65:  # Soglia leggermente più bassa
